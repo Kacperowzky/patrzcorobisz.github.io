@@ -22,24 +22,15 @@ document.querySelectorAll('.tab').forEach(tab=>{
 });
 
 // Insert basic HTML5 skeleton
-const skeleton = `<!doctype html>
-<html lang="pl">
+const skeleton = `<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Moja strona</title>
-  <style>
-    /* Twój CSS tu */
-    body{font-family: Arial, sans-serif; padding:32px; text-align:center}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <h1>Witaj — to jest szkielet HTML5</h1>
-  <p>Edytuj kod po lewej, podgląd po prawej.</p>
-  <script>
-    // Twój JS tu
-    console.log('Hello from skeleton');
-  </script>
+    
 </body>
 </html>
 `;

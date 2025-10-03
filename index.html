@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Code Editor</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+    }
+    textarea {
+      width: 50%;
+      height: 100%;
+      border: none;
+      outline: none;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 10px;
+    }
+    iframe {
+      width: 50%;
+      height: 100%;
+      border: none;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="editor">
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    h1 { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Witaj w edytorze!</h1>
+  <p>Edytuj kod po lewej stronie.</p>
+</body>
+</html>
+  </textarea>
+  <iframe id="preview"></iframe>
 
+  <script>
+    const editor = document.getElementById("editor");
+    const preview = document.getElementById("preview");
+
+    function updatePreview() {
+      preview.srcdoc = editor.value;
+    }
+
+    editor.addEventListener("input", updatePreview);
+    updatePreview(); // żeby załadować początkowy kod
+  </script>
+</body>
+</html>

@@ -21,7 +21,7 @@ document.querySelectorAll('.tab').forEach(tab=>{
   });
 });
 
-// Insert basic HTML5 skeleton
+// Insert basic HTML5 skeleton (minimalny)
 const skeleton = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,8 +32,7 @@ const skeleton = `<!DOCTYPE html>
 <body>
     
 </body>
-</html>
-`;
+</html>`;
 
 // start empty as requested
 htmlEditor.value = '';
@@ -42,7 +41,6 @@ jsEditor.value = '';
 
 // Build combined document and set iframe srcdoc
 function buildPreview() {
-  // If user wrote a full HTML document in HTML editor (contains <html or <!doctype), use it as base.
   const htmlVal = htmlEditor.value.trim();
   const cssVal = cssEditor.value;
   const jsVal = jsEditor.value;
@@ -50,13 +48,10 @@ function buildPreview() {
   let full;
   const looksLikeFullDoc = /<!doctype|<html/i.test(htmlVal);
   if (looksLikeFullDoc && htmlVal.length>0) {
-    // We will try to inject CSS and JS if provided (best-effort)
     full = htmlVal;
-    // If CSS present and no <style> tag in HTML, inject
     if (cssVal && !/<style[\s>]/i.test(full)) {
       full = full.replace(/<\/head>/i, `<style>\n${cssVal}\n</style>\n</head>`);
     }
-    // If JS present and no <script> tag at end, inject before </body>
     if (jsVal && !/<script[\s>]/i.test(full)) {
       if (/<\/body>/i.test(full)) {
         full = full.replace(/<\/body>/i, `<script>\n${jsVal}\n</script>\n</body>`);
@@ -65,13 +60,12 @@ function buildPreview() {
       }
     }
   } else {
-    // Build minimal HTML wrapping user's fragments
     full = `<!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Podgląd</title>
+  <title>Preview</title>
   <style>\n${cssVal}\n</style>
 </head>
 <body>
@@ -97,9 +91,7 @@ runBtn.addEventListener('click', buildPreview);
 // Insert skeleton
 insertBtn.addEventListener('click', ()=>{
   htmlEditor.value = skeleton;
-  // switch to HTML tab
   document.querySelector('.tab[data-editor="html"]').click();
-  // update preview immediately
   buildPreview();
 });
 
@@ -153,4 +145,3 @@ downloadHtml.addEventListener('click', ()=>{
 
 // initial preview blank
 buildPreview();
-

@@ -1,59 +1,70 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Live Code Editor</title>
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      height: 100vh;
-    }
-    textarea {
-      width: 50%;
-      height: 100%;
-      border: none;
-      outline: none;
-      font-family: monospace;
-      font-size: 14px;
-      padding: 10px;
-    }
-    iframe {
-      width: 50%;
-      height: 100%;
-      border: none;
-      background: white;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Live Editor — HTML / CSS / JS</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <textarea id="editor">
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial; text-align: center; margin-top: 50px; }
-    h1 { color: red; }
-  </style>
-</head>
-<body>
-  <h1>Witaj w edytorze!</h1>
-  <p>Edytuj kod po lewej stronie.</p>
-</body>
-</html>
-  </textarea>
-  <iframe id="preview"></iframe>
+  <header class="topbar">
+    <div class="brand">LiveCraft</div>
+    <div class="controls">
+      <button id="insertSkeleton" class="btn">Wstaw szkielet HTML5</button>
+      <button id="clearAll" class="btn ghost">Wyczyść</button>
+    </div>
+  </header>
 
-  <script>
-    const editor = document.getElementById("editor");
-    const preview = document.getElementById("preview");
+  <main class="workspace">
+    <section class="left-panel">
+      <nav class="tabs" role="tablist">
+        <button class="tab active" data-editor="html">HTML</button>
+        <button class="tab" data-editor="css">CSS</button>
+        <button class="tab" data-editor="js">JavaScript</button>
+      </nav>
 
-    function updatePreview() {
-      preview.srcdoc = editor.value;
-    }
+      <div class="editor-area">
+        <div class="editor-wrap" data-name="html">
+          <label class="editor-label">HTML</label>
+          <textarea id="htmlEditor" class="editor" placeholder="Tutaj wpisz HTML..."></textarea>
+        </div>
 
-    editor.addEventListener("input", updatePreview);
-    updatePreview(); // żeby załadować początkowy kod
-  </script>
+        <div class="editor-wrap hidden" data-name="css">
+          <label class="editor-label">CSS</label>
+          <textarea id="cssEditor" class="editor" placeholder="Tutaj wpisz CSS..."></textarea>
+        </div>
+
+        <div class="editor-wrap hidden" data-name="js">
+          <label class="editor-label">JavaScript</label>
+          <textarea id="jsEditor" class="editor" placeholder="Tutaj wpisz JavaScript..."></textarea>
+        </div>
+      </div>
+
+      <footer class="left-footer">
+        <div class="status">Edytuj po lewej — podgląd po prawej.</div>
+        <div class="actions">
+          <button id="downloadHtml" class="btn small">Pobierz HTML</button>
+        </div>
+      </footer>
+    </section>
+
+    <div id="gutter" class="gutter" title="Przeciągnij, aby zmienić szerokość"></div>
+
+    <section class="right-panel">
+      <div class="preview-top">
+        <div class="preview-title">Podgląd</div>
+        <div class="preview-actions">
+          <label class="toggle">
+            <input id="autoUpdate" type="checkbox" checked>
+            <span>Auto</span>
+          </label>
+          <button id="runBtn" class="btn small">Uruchom</button>
+        </div>
+      </div>
+      <iframe id="preview" sandbox="allow-scripts allow-same-origin"></iframe>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>

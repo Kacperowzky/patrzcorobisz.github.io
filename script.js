@@ -1,12 +1,17 @@
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
 
 require(['vs/editor/editor.main'], function () {
+  // --- Edytory z kolorami i podpowiedziami ---
   window.htmlEditor = monaco.editor.create(document.getElementById('htmlEditor'), {
     value: '',
     language: 'html',
     theme: 'vs-dark',
+    fontSize: 15,
+    fontFamily: 'JetBrains Mono',
     automaticLayout: true,
-    fontSize: 14,
+    autoClosingBrackets: "always",
+    autoClosingQuotes: "always",
+    autoClosingTags: true,
     minimap: { enabled: false }
   });
 
@@ -14,8 +19,9 @@ require(['vs/editor/editor.main'], function () {
     value: '',
     language: 'css',
     theme: 'vs-dark',
+    fontSize: 15,
+    fontFamily: 'JetBrains Mono',
     automaticLayout: true,
-    fontSize: 14,
     minimap: { enabled: false }
   });
 
@@ -23,22 +29,23 @@ require(['vs/editor/editor.main'], function () {
     value: '',
     language: 'javascript',
     theme: 'vs-dark',
+    fontSize: 15,
+    fontFamily: 'JetBrains Mono',
     automaticLayout: true,
-    fontSize: 14,
     minimap: { enabled: false }
   });
 
-  initEditorLogic();
+  initLogic();
 });
 
-function initEditorLogic() {
+function initLogic() {
   const preview = document.getElementById('preview');
   const runBtn = document.getElementById('runBtn');
   const autoUpdate = document.getElementById('autoUpdate');
   const insertBtn = document.getElementById('insertSkeleton');
   const clearAll = document.getElementById('clearAll');
-  const downloadHtml = document.getElementById('downloadHtml');
 
+  // --- Przełączanie zakładek ---
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -48,6 +55,26 @@ function initEditorLogic() {
         w.classList.toggle('hidden', w.dataset.name !== name);
       });
     });
+  });
+
+  // --- Automatyczne domykanie tagów HTML ---
+  htmlEditor.onKeyDown(e => {
+    if (e.code === "Enter") {
+      const pos = htmlEditor.getPosition();
+      const model = htmlEditor.getModel();
+      const line = model.getLineContent(pos.lineNumber).trim();
+
+      const tagMatch = /^([a-zA-Z0-9]+)$/.exec(line);
+      if (tagMatch) {
+        const tag = tagMatch[1];
+        model.applyEdits([{
+          range: new monaco.Range(pos.lineNumber, 1, pos.lineNumber, line.length + 1),
+          text: `<${tag}></${tag}>`
+        }]);
+        htmlEditor.setPosition({ lineNumber: pos.lineNumber, column: tag.length + 3 });
+        e.preventDefault();
+      }
+    }
   });
 
   const skeleton = `<!DOCTYPE html>
@@ -66,42 +93,21 @@ function initEditorLogic() {
     const htmlVal = htmlEditor.getValue();
     const cssVal = cssEditor.getValue();
     const jsVal = jsEditor.getValue();
-
-    let full;
-    const looksLikeFullDoc = /<!doctype|<html/i.test(htmlVal);
-    if (looksLikeFullDoc && htmlVal.length > 0) {
-      full = htmlVal;
-      if (cssVal && !/<style[\s>]/i.test(full)) {
-        full = full.replace(/<\/head>/i, `<style>\n${cssVal}\n</style>\n</head>`);
-      }
-      if (jsVal && !/<script[\s>]/i.test(full)) {
-        if (/<\/body>/i.test(full)) {
-          full = full.replace(/<\/body>/i, `<script>\n${jsVal}\n</script>\n</body>`);
-        } else {
-          full += `\n<script>\n${jsVal}\n</script>\n`;
-        }
-      }
-    } else {
-      full = `<!doctype html>
-<html lang="en">
+    preview.srcdoc = `
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Preview</title>
-  <style>\n${cssVal}\n</style>
+<style>${cssVal}</style>
 </head>
 <body>
 ${htmlVal}
-<script>\n${jsVal}\n</script>
+<script>${jsVal}<\/script>
 </body>
 </html>`;
-    }
-
-    preview.srcdoc = full;
   }
 
-  [htmlEditor, cssEditor, jsEditor].forEach(editor => {
-    editor.onDidChangeModelContent(() => {
+  [htmlEditor, cssEditor, jsEditor].forEach(ed => {
+    ed.onDidChangeModelContent(() => {
       if (autoUpdate.checked) buildPreview();
     });
   });
@@ -115,49 +121,35 @@ ${htmlVal}
   });
 
   clearAll.addEventListener('click', () => {
-    if (!confirm('Na pewno wyczyścić wszystkie edytory?')) return;
+    if (!confirm('Wyczyścić wszystko?')) return;
     htmlEditor.setValue('');
     cssEditor.setValue('');
     jsEditor.setValue('');
     buildPreview();
   });
 
-  downloadHtml.addEventListener('click', () => {
-    const blob = new Blob([preview.srcdoc || ''], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'index.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+  // --- Przeciągany pasek ---
+  const gutter = document.getElementById('gutter');
+  const left = document.querySelector('.left-panel');
+  let dragging = false;
+  let startX, startWidth;
+  gutter.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startWidth = left.getBoundingClientRect().width;
+    document.body.style.userSelect = 'none';
   });
-
-  (function () {
-    const gutter = document.getElementById('gutter');
-    const left = document.querySelector('.left-panel');
-    let dragging = false;
-    let startX, startWidth;
-    gutter.addEventListener('mousedown', e => {
-      dragging = true;
-      startX = e.clientX;
-      startWidth = left.getBoundingClientRect().width;
-      document.body.style.userSelect = 'none';
-    });
-    window.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      const dx = e.clientX - startX;
-      let newW = startWidth + dx;
-      const min = 300, max = window.innerWidth - 300;
-      newW = Math.max(min, Math.min(max, newW));
-      left.style.width = newW + 'px';
-    });
-    window.addEventListener('mouseup', () => {
-      dragging = false;
-      document.body.style.userSelect = '';
-    });
-  })();
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    let newW = startWidth + dx;
+    newW = Math.max(300, Math.min(window.innerWidth - 300, newW));
+    left.style.width = newW + 'px';
+  });
+  window.addEventListener('mouseup', () => {
+    dragging = false;
+    document.body.style.userSelect = '';
+  });
 
   buildPreview();
 }

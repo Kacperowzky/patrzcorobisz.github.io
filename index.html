@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Live Editor — HTML / CSS / JS</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Ładowanie Monaco Editor (VS Code w przeglądarce) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">LiveCraft</div>
+    <div class="brand">LiveCraft Pro</div>
     <div class="controls">
       <button id="insertSkeleton" class="btn">Wstaw szkielet HTML5</button>
       <button id="clearAll" class="btn ghost">Wyczyść</button>
@@ -17,47 +20,31 @@
 
   <main class="workspace">
     <section class="left-panel">
-      <nav class="tabs" role="tablist">
+      <nav class="tabs">
         <button class="tab active" data-editor="html">HTML</button>
         <button class="tab" data-editor="css">CSS</button>
         <button class="tab" data-editor="js">JavaScript</button>
       </nav>
 
       <div class="editor-area">
-        <div class="editor-wrap" data-name="html">
-          <label class="editor-label">HTML</label>
-          <textarea id="htmlEditor" class="editor" placeholder="Tutaj wpisz HTML..."></textarea>
-        </div>
-
-        <div class="editor-wrap hidden" data-name="css">
-          <label class="editor-label">CSS</label>
-          <textarea id="cssEditor" class="editor" placeholder="Tutaj wpisz CSS..."></textarea>
-        </div>
-
-        <div class="editor-wrap hidden" data-name="js">
-          <label class="editor-label">JavaScript</label>
-          <textarea id="jsEditor" class="editor" placeholder="Tutaj wpisz JavaScript..."></textarea>
-        </div>
+        <div class="editor-wrap" data-name="html"><div id="htmlEditor" class="editor"></div></div>
+        <div class="editor-wrap hidden" data-name="css"><div id="cssEditor" class="editor"></div></div>
+        <div class="editor-wrap hidden" data-name="js"><div id="jsEditor" class="editor"></div></div>
       </div>
 
       <footer class="left-footer">
         <div class="status">Edytuj po lewej — podgląd po prawej.</div>
-        <div class="actions">
-          <button id="downloadHtml" class="btn small">Pobierz HTML</button>
-        </div>
+        <button id="downloadHtml" class="btn small">Pobierz HTML</button>
       </footer>
     </section>
 
-    <div id="gutter" class="gutter" title="Przeciągnij, aby zmienić szerokość"></div>
+    <div id="gutter" class="gutter"></div>
 
     <section class="right-panel">
       <div class="preview-top">
         <div class="preview-title">Podgląd</div>
         <div class="preview-actions">
-          <label class="toggle">
-            <input id="autoUpdate" type="checkbox" checked>
-            <span>Auto</span>
-          </label>
+          <label class="toggle"><input id="autoUpdate" type="checkbox" checked><span>Auto</span></label>
           <button id="runBtn" class="btn small">Uruchom</button>
         </div>
       </div>

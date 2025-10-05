@@ -3,27 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Live Editor — HTML / CSS / JS</title>
+  <title>LiveCraft Pro — Ultimate Code Studio</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Ładowanie Monaco Editor (VS Code w przeglądarce) -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">LiveCraft Pro</div>
+  <header class="topbar glass">
+    <div class="brand"><span class="accent">⚡</span> LiveCraft Pro</div>
     <div class="controls">
-      <button id="insertSkeleton" class="btn">Wstaw szkielet HTML5</button>
+      <button id="insertSkeleton" class="btn">Szkielet HTML5</button>
       <button id="clearAll" class="btn ghost">Wyczyść</button>
     </div>
   </header>
 
   <main class="workspace">
-    <section class="left-panel">
+    <section class="left-panel glass">
       <nav class="tabs">
         <button class="tab active" data-editor="html">HTML</button>
         <button class="tab" data-editor="css">CSS</button>
-        <button class="tab" data-editor="js">JavaScript</button>
+        <button class="tab" data-editor="js">JS</button>
       </nav>
 
       <div class="editor-area">
@@ -33,16 +32,15 @@
       </div>
 
       <footer class="left-footer">
-        <div class="status">Edytuj po lewej — podgląd po prawej.</div>
-        <button id="downloadHtml" class="btn small">Pobierz HTML</button>
+        <div class="status">Piszesz kod po lewej — magia po prawej ✨</div>
       </footer>
     </section>
 
     <div id="gutter" class="gutter"></div>
 
-    <section class="right-panel">
+    <section class="right-panel glass">
       <div class="preview-top">
-        <div class="preview-title">Podgląd</div>
+        <div class="preview-title">Podgląd strony</div>
         <div class="preview-actions">
           <label class="toggle"><input id="autoUpdate" type="checkbox" checked><span>Auto</span></label>
           <button id="runBtn" class="btn small">Uruchom</button>

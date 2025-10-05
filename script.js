@@ -1,7 +1,6 @@
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
 
 require(['vs/editor/editor.main'], function () {
-  // --- Edytory z kolorami i podpowiedziami ---
   window.htmlEditor = monaco.editor.create(document.getElementById('htmlEditor'), {
     value: '',
     language: 'html',
@@ -57,21 +56,23 @@ function initLogic() {
     });
   });
 
-  // --- Automatyczne domykanie tagów HTML ---
+  // --- Automatyczne domykanie tagów HTML (poprawione) ---
   htmlEditor.onKeyDown(e => {
     if (e.code === "Enter") {
       const pos = htmlEditor.getPosition();
       const model = htmlEditor.getModel();
-      const line = model.getLineContent(pos.lineNumber).trim();
+      const lineNumber = pos.lineNumber;
+      const lineContent = model.getLineContent(lineNumber);
+      const trimmed = lineContent.trim();
 
-      const tagMatch = /^([a-zA-Z0-9]+)$/.exec(line);
+      const tagMatch = /^([a-zA-Z0-9]+)$/.exec(trimmed);
       if (tagMatch) {
         const tag = tagMatch[1];
         model.applyEdits([{
-          range: new monaco.Range(pos.lineNumber, 1, pos.lineNumber, line.length + 1),
+          range: new monaco.Range(lineNumber, 1, lineNumber, lineContent.length + 1),
           text: `<${tag}></${tag}>`
         }]);
-        htmlEditor.setPosition({ lineNumber: pos.lineNumber, column: tag.length + 3 });
+        htmlEditor.setPosition({ lineNumber, column: tag.length + 3 });
         e.preventDefault();
       }
     }

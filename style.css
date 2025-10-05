@@ -5,27 +5,42 @@
 }
 
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #eee;
+  font-family: "JetBrains Mono", monospace;
+  background: radial-gradient(circle at 20% 20%, #111, #050505 80%);
+  color: #e0e0e0;
   height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
+/* --- GLASS EFFECT --- */
+.glass {
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+
+/* --- HEADER --- */
 .topbar {
-  background: #111;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.6rem 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  padding: 0.6rem 1.4rem;
+  margin: 0.7rem;
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
 }
 
 .brand {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #00d9ff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #00ffe1;
+}
+
+.accent {
+  color: #00ffe1;
 }
 
 .controls {
@@ -34,132 +49,119 @@ body {
 }
 
 .btn {
-  background: #00d9ff;
+  background: linear-gradient(135deg, #00ffe1, #0077ff);
   color: #111;
   border: none;
-  padding: 0.4rem 0.9rem;
-  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 255, 200, 0.3);
+  transition: all 0.2s;
 }
 .btn:hover {
-  background: #00bfe3;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,255,200,0.4);
 }
-
 .btn.ghost {
   background: transparent;
-  border: 1px solid #00d9ff;
-  color: #00d9ff;
+  border: 1px solid #00ffe1;
+  color: #00ffe1;
 }
 .btn.ghost:hover {
-  background: rgba(0, 217, 255, 0.15);
-}
-
-.btn.small {
-  font-size: 0.8rem;
-  padding: 0.3rem 0.7rem;
+  background: rgba(0, 255, 200, 0.1);
 }
 
 .workspace {
   flex: 1;
   display: flex;
-  height: calc(100vh - 50px);
-  overflow: hidden;
+  gap: 0.7rem;
+  padding: 0.7rem;
 }
 
 .left-panel {
-  width: 50%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  background: #1e1e1e;
+  overflow: hidden;
 }
 
 .tabs {
   display: flex;
-  background: #2d2d2d;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 .tab {
   flex: 1;
-  background: none;
-  color: #bbb;
+  background: transparent;
+  color: #aaa;
   border: none;
   padding: 0.6rem;
   cursor: pointer;
   font-weight: 500;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 .tab:hover {
-  background: #333;
+  color: #00ffe1;
 }
 .tab.active {
-  background: #00d9ff;
-  color: #111;
+  color: #00ffe1;
+  border-bottom: 2px solid #00ffe1;
 }
 
 .editor-area {
   flex: 1;
   position: relative;
+  overflow: hidden;
+  border-radius: 0 0 14px 14px;
 }
 .editor {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
 }
 .hidden {
   display: none;
 }
 
 .left-footer {
-  background: #222;
-  padding: 0.4rem 0.8rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
+  padding: 0.6rem;
   font-size: 0.85rem;
-  border-top: 1px solid #333;
+  color: #888;
 }
 
 .gutter {
-  width: 5px;
-  background: #111;
+  width: 6px;
   cursor: ew-resize;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.gutter:hover {
+  background: rgba(0,255,200,0.3);
 }
 
 .right-panel {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  overflow: hidden;
 }
 
 .preview-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #111;
-  color: #eee;
+  background: rgba(0,0,0,0.4);
   padding: 0.5rem 1rem;
-}
-
-.preview-actions {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  color: #00ffe1;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 iframe {
   flex: 1;
   border: none;
   background: #fff;
-  width: 100%;
-}
-
-.toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  cursor: pointer;
-  font-size: 0.9rem;
+  border-radius: 0 0 14px 14px;
 }

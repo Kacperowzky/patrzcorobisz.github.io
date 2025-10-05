@@ -6,7 +6,7 @@
 
 body {
   font-family: "JetBrains Mono", monospace;
-  background: radial-gradient(circle at 20% 20%, #111, #050505 80%);
+  background: radial-gradient(circle at 20% 20%, #0a0a0a, #050505 80%);
   color: #e0e0e0;
   height: 100vh;
   overflow: hidden;
